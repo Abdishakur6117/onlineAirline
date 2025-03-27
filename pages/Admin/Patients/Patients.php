@@ -194,9 +194,9 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                           <div class="modal-body">
                                   <form id="PatientForm" method="POST" action="">
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">user_id</label>
+                                        <label for="name" class="form-label">Patient Name</label>
                                         <select name="user_id" id="user_id" class="form-control">
-                                          <option value="">Select Users</option>
+                                          <option value="">Select Patients</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">

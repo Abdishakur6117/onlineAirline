@@ -194,15 +194,18 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                           <div class="modal-body">
                                   <form id="DoctorForm" method="POST" action="">
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">user_id</label>
+                                        <label for="name" class="form-label">Doctor Name</label>
                                         <select name="user_id" id="user_id" class="form-control">
-                                          <option value="">Select Users</option>
+                                          <option value="">Select Doctors</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label for="name" class="form-label">specialization</label>
                                         <select name="special" id="special" class="form-control">
                                           <option value="">select specialization</option>
+                                          <option value="Pediatrics">Pediatrics</option>
+                                          <option value="General Physician">General Physician</option>
+                                          <option value="General Surgery">General Surgery</option>
                                           <option value="Cardiologist">Cardiologist</option>
                                           <option value="Dentist">Dentist</option>
                                         </select>
@@ -257,6 +260,9 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                                   <label for="edit_special" class="form-label">Specialization</label>
                                   <select name="edit_special" id="edit_special" class="form-control">
                                       <option value="">Select specialization</option>
+                                      <option value="Pediatrics">Pediatrics</option>
+                                      <option value="General Physician">General Physician</option>
+                                      <option value="General Surgery">General Surgery</option>
                                       <option value="Cardiologist">Cardiologist</option>
                                       <option value="Dentist">Dentist</option>
                                   </select>

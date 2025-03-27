@@ -167,45 +167,29 @@ function createAppointment() {
         echo json_encode(["status" => "error", "message" => "Error: " . $e->getMessage()]);
     }
 }
-
 function deleteAppointment() {
-    include '../../Connection/connection.php';
-    $db = new DatabaseConnection();
-    $conn = $db->getConnection();
+  include '../../Connection/connection.php';
+  $db = new DatabaseConnection();
+  $conn = $db->getConnection();
 
-    // Collect data from POST request
-    $appointment_id = $_POST['id'];
-
-    // Validate appointment_id
-    if(!$appointment_id) {
-        echo json_encode(["status" => "error", "message" => 'Appointment ID is required']);
-        return;
+  // Collect data from POST request
+  $appointment_id = $_POST['id'];
+  if(!$appointment_id )
+    {
+        echo json_encode(["status"=>"error", 
+         "message"=>' appointment_id are required']); 
+         return;
     }
 
-    // Fetch the patient_id associated with the appointment_id to update the Users table
-    $stmt = $conn->prepare("SELECT patient_id FROM Appointments WHERE appointment_id = :appointment_id");
-    $stmt->bindParam(':appointment_id', $appointment_id);
-    $stmt->execute();
-    
-    $appointment = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$appointment) {
-        echo json_encode(["status" => "error", "message" => "Appointment not found"]);
-        return;
-    }
+  // Prepare and execute the DELETE query
+  $stmt = $conn->prepare("DELETE FROM Appointments WHERE appointment_id = :appointment_id");
+  $stmt->bindParam(':appointment_id', $appointment_id);
 
-    $patient_id = $appointment['patient_id'];
-
-    // Update the Users table for the patient (soft delete: set deleted_at to NOW())
-    $stmt = $conn->prepare("UPDATE Users SET deleted_at = NOW(), status='inactive' WHERE user_id = (SELECT user_id FROM Patients WHERE patient_id = :patient_id)");
-    $stmt->bindParam(':patient_id', $patient_id);
-
-    if ($stmt->execute()) {
-        echo json_encode(["status" => "success", "message" => "Appointment soft deleted successfully!"]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Failed to soft delete Appointment."]);
-    }
+  if ($stmt->execute()) {
+      echo json_encode(["status" => "success", "message" => "User deleted successfully!"]);
+  } else {
+      echo json_encode(["status" => "error", "message" => "Failed to delete user."]);
+  }
 }
-
 
 ?>

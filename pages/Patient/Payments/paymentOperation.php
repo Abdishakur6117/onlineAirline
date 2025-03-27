@@ -228,61 +228,29 @@ function UpdatePayment() {
     // Return success response
     echo json_encode(["status" => "success", "message" => "Payment updated successfully!"]);
 }
-
 function DeletePayment() {
-    include '../../Connection/connection.php';
-    $db = new DatabaseConnection();
-    $conn = $db->getConnection();
+  include '../../Connection/connection.php';
+  $db = new DatabaseConnection();
+  $conn = $db->getConnection();
 
-    // Collect data from POST request
-    $payment_id = $_POST['id'];
-
-    // Validate payment_id
-    if (!$payment_id) {
-        echo json_encode(["status" => "error", "message" => 'payment_id is required']);
-        return;
+  // Collect data from POST request
+  $payment_id = $_POST['id'];
+  if(!$payment_id )
+    {
+        echo json_encode(["status"=>"error", 
+         "message"=>' payment_id are required']); 
+         return;
     }
 
-    // First, fetch the user_id associated with this payment
-    $stmt = $conn->prepare("SELECT u.user_id
-                            FROM Payments p
-                            JOIN Appointments a ON p.appointment_id = a.appointment_id
-                            JOIN Patients pt ON a.patient_id = pt.patient_id
-                            JOIN Users u ON pt.user_id = u.user_id
-                            WHERE p.payment_id = :payment_id");
-    $stmt->bindParam(':payment_id', $payment_id);
-    $stmt->execute();
+  // Prepare and execute the DELETE query
+  $stmt = $conn->prepare("DELETE FROM Payments WHERE payment_id = :payment_id");
+  $stmt->bindParam(':payment_id', $payment_id);
 
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($user) {
-        $user_id = $user['user_id'];
-
-        // Now, perform the soft delete for the user in the Users table
-        $stmt = $conn->prepare("UPDATE Users
-                                SET deleted_at = NOW(), status = 'inactive'
-                                WHERE user_id = :user_id AND deleted_at IS NULL");
-        $stmt->bindParam(':user_id', $user_id);
-
-        // Execute the update
-        if ($stmt->execute()) {
-            // Proceed to soft delete the payment itself
-            $stmt = $conn->prepare("UPDATE Payments 
-                                    SET deleted_at = NOW() 
-                                    WHERE payment_id = :payment_id AND deleted_at IS NULL");
-            $stmt->bindParam(':payment_id', $payment_id);
-
-            if ($stmt->execute()) {
-                echo json_encode(["status" => "success", "message" => "Payment and associated user marked as inactive successfully!"]);
-            } else {
-                echo json_encode(["status" => "error", "message" => "Failed to soft delete payment."]);
-            }
-        } else {
-            echo json_encode(["status" => "error", "message" => "Failed to mark user as inactive."]);
-        }
-    } else {
-        echo json_encode(["status" => "error", "message" => "User not found for this payment."]);
-    }
+  if ($stmt->execute()) {
+      echo json_encode(["status" => "success", "message" => "Payments deleted successfully!"]);
+  } else {
+      echo json_encode(["status" => "error", "message" => "Failed to delete user."]);
+  }
 }
 
 ?>

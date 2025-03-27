@@ -43,68 +43,6 @@ function loadData(){
     echo json_encode(["status" => "error", "message" => $e->getMessage()]);
   }
 }
-//insert users
-// function createPatient(){
-//   include '../../Connection/connection.php';
-//   $db = new DatabaseConnection();
-//   $conn =$db->getConnection();
-
-//   $user_id =$_POST['user_id'];
-//   $date_of_birth =$_POST['date_of_birth'];
-//   $gender =$_POST['gender'];
-//   $bloodType =$_POST['bloodType'];
-//   $address =$_POST['address'];
-
-//   if(!$user_id){
-//     echo json_encode(["status" => "error", "message" => "user_id  is required."]);
-//       return;
-//   }
-//   if(!$date_of_birth){
-//     echo json_encode(["status" => "error", "message" => "date_of_birth  is required."]);
-//       return;
-//   }
-//   if(!$gender){
-//     echo json_encode(["status" => "error", "message" => " gender  is required."]);
-//       return;
-//   }
-//   if(!$bloodType){
-//     echo json_encode(["status" => "error", "message" => " bloodType  is required."]);
-//       return;
-//   }
-//   if(!$address){
-//     echo json_encode(["status" => "error", "message" => " address  is required."]);
-//       return;
-//   }
-//   //checks User_id
-//   $user_idCheck = "SELECT * FROM Patients  WHERE    user_id   =:user_id ";
-//   $stm =$conn->prepare($user_idCheck);
-//   $stm->bindParam(':user_id ',$user_id);
-//   $stm->execute();
-//   $user_idExists = $stm->fetchColumn();
-//   if($user_idExists > 0){
-//     echo json_encode(["status" => "error", "message" => 'user_id already exists ']);
-//     return;
-
-//   }
-
-//    // INSERT query with correct column names in database
-//    $query = "INSERT INTO Patients   (user_id ,date_of_birth  ,gender,blood_type ,address) VALUES (:user_id,:date_of_birth,:gender,:bloodType,:address)";
-//    $stm= $conn->prepare($query);
-//    $stm->bindParam(':user_id', $user_id);
-//    $stm->bindParam(':date_of_birth', $date_of_birth);
-//    $stm->bindParam(':gender', $gender);
-//    $stm->bindParam(':bloodType', $bloodType);
-//    $stm->bindParam(':address', $address);
-  
-
-//     if($stm->execute()){
-//       echo json_encode(["status"=>"success",  "message"=>' data saved successfully']); 
-//       return;
-//     }else{
-//       echo json_encode(['status'=>'error', "message"=>'data are  not saved']);
-//     }
-
-// }
 function createPatient(){
   include '../../Connection/connection.php';
   $db = new DatabaseConnection();
@@ -165,64 +103,6 @@ function createPatient(){
     echo json_encode(["status" => "error", "message" => "Data was not saved"]);
   }
 }
-//Update
-// function UpdatePatient(){
-//   include '../../Connection/connection.php';
-//   $db = new DatabaseConnection();
-//   $conn =$db->getConnection();
-
-//   $patient_id = $_POST['patient_id'] ;
-//   $edit_user_id = $_POST['edit_user_id'] ;
-//   $edit_dob = $_POST['edit_date_of_birth'] ;
-//   $edit_gender = $_POST['edit_gender'] ;
-//   $edit_blood_type = $_POST['edit_bloodType'] ;
-//   $edit_address = $_POST['edit_address'] ;
-  
-  
-//   if (!$patient_id) {
-//     echo json_encode(["status"=>"error", "message"=>' Patient_id are required']); 
-//          return;
-//   }
-//   if (!$edit_user_id) {
-//     echo json_encode(["status"=>"error", "message"=>' User_id are required']); 
-//          return;
-//   }
-//   if (!$edit_dob) {
-//     echo json_encode(["status" => "error", "message" => 'DOB is required']);
-//     return;
-//   }
-//   if (!$edit_gender) {
-//     echo json_encode(["status" => "error", "message" => 'Gender is required']);
-//     return;
-//   }
-//   if (!$edit_blood_type) {
-//     echo json_encode(["status" => "error", "message" => 'Blood_type is required']);
-//     return;
-//   }
-//   if (!$edit_address) {
-//     echo json_encode(["status" => "error", "message" => 'Address is required']);
-//     return;
-//   }
-
-
-  
-//    // INSERT query with correct column names in database
-//    $query = "UPDATE  Patients SET patient_id=:user_id ,user_id=:special ,date_of_birth=:availability ,gender=:consultation,blood_type=:hhh,address=:jjjj WHERE doctor_id=:doctor_id";
-//    $stm= $conn->prepare($query);
-//    $stm->bindParam(':patient_id', $doctor_id);
-//    $stm->bindParam(':user_id', $user_id);
-//    $stm->bindParam(':special', $special);
-//    $stm->bindParam(':availability', $availability);
-//    $stm->bindParam(':consultation', $consultation);
-  
-//     if($stm->execute()){
-//       echo json_encode(["status"=>"success",  "message"=>' Updated successfully']); 
-//       return;
-//     }else{
-//       echo json_encode(['status'=>'error', "message"=>'Update are  not successfully']);
-//     }
-
-// }
 function UpdatePatient(){
   include '../../Connection/connection.php';
   $db = new DatabaseConnection();
@@ -305,4 +185,6 @@ function DeletePatient() {
       echo json_encode(["status" => "error", "message" => "Failed to delete Patient."]);
   }
 }
+
+
 ?>
