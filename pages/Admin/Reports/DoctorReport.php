@@ -41,7 +41,19 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
     width: calc(118% - 280px); /* Default width marka sidebar furan */
     transition: width 0.3s ease-in-out;
 }
-
+table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
   </style>
 </head>
 
@@ -162,24 +174,30 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
       <div class="main-panel">        
         <div class="content-wrapper">
           <div class="body">
-              <h2>Report Form</h2>
-              <input type="text" id="doctor" placeholder="Enter Doctor Name">
-              <input type="text" id="disease" placeholder="Enter Disease Name">
-              <button type="button" class="btn btn-primary" id="insert">Search</button>
+            <h2>Search Doctor</h2>
 
-              <!-- Table to display results -->
-              <table id="doctorTable" class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>Doctor Name</th>
-                    <th>Specialty</th>
-                    <th>Availability</th>
-                    <th>Consultation</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Dynamic rows will be inserted here -->
-                </tbody>
+              <label for="doctor_name">Doctor Name:</label>
+              <input type="text" id="doctor_name" placeholder="Enter Doctor Name">
+              
+              <label for="specialist">Specialist:</label>
+              <input type="text" id="specialist" placeholder="Enter Specialist Field">
+              
+              <button onclick="searchDoctor()">Search</button>
+
+              <h3>Doctor Details:</h3>
+              
+              <table id="doctor_table" style="display: none;">
+                  <thead>
+                      <tr>
+                          <th>Doctor Name</th>
+                          <th>Specialist</th>
+                          <th>availability</th>
+                          <th>consultation_fee</th>
+                          <th>Actions</th>
+                      </tr>
+                  </thead>
+                  <tbody id="doctor_info">
+                  </tbody>
               </table>
 
           </div> 
@@ -203,48 +221,109 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
  <!-- scripts -->
   <!-- container-scroller -->
    <!-- scripts -->
-    <script>
-      $(document).ready(function() {
-        // When the "Search" button is clicked
-        $('#insert').on('click', function() {
-          var doctor = $('#doctor').val();  // Get the doctor's name from the input
-          var disease = $('#disease').val();  // Get the disease name from the input
 
-          // Perform validation (optional)
-          if (!doctor || !disease) {
-            alert('Please enter both Doctor and Disease!');
-            return;
+    <script>
+        // function searchDoctor() {
+        //     var doctorName = $("#doctor_name").val();
+        //     var specialist = $("#specialist").val();
+
+        //     if (doctorName == "" || specialist == "") {
+        //         alert("Please enter both Doctor Name and Specialist.");
+        //         return;
+        //     }
+
+        //     $.ajax({
+        //         url: "report_action.php?url=getDoctor",
+        //         type: "POST",
+        //         data: { doctor_name: doctorName, specialist: specialist },
+        //         dataType: "json",
+        //         success: function(response) {
+        //             if (response.status == "success") {
+        //                 var doctor = response.data;
+        //                 $("#doctor_info").html(
+        //                     "<tr>" +
+        //                         "<td>" + doctor.fullName + "</td>" +
+        //                         "<td>" + doctor.specialization + "</td>" +
+        //                         "<td>" + doctor.availability + "</td>" +
+        //                         "<td>" + doctor.consultation_fee + "</td>" +
+        //                     "</tr>"
+        //                 );
+        //                 $("#doctor_table").show();
+        //             } else {
+        //                 $("#doctor_info").html("<tr><td colspan='3' style='color:red;'>Doctor not found.</td></tr>");
+        //                 $("#doctor_table").show();
+        //             }
+        //         }
+        //     });
+        // }
+
+        function searchDoctor() {
+          var doctorName = $("#doctor_name").val();
+          var specialist = $("#specialist").val();
+
+          if (doctorName == "" || specialist == "") {
+              alert("Please enter both Doctor Name and Specialist.");
+              return;
           }
 
-          // Send AJAX request to the server
-          $.get('report_action.php', { url: 'searchDoctor', doctor: doctor, disease: disease }, function(data) {
-            const response = JSON.parse(data);
-
-            // Clear the existing table rows
-            $('#doctorTable tbody').empty();
-
-            if (response.status === 'success' && response.data.length > 0) {
-              // Loop through the results and add rows to the table
-              response.data.forEach(function(doctor) {
-                $('#doctorTable tbody').append(`
-                  <tr>
-                    <td>${doctor.fullName}</td>
-                    <td>${doctor.specialty}</td>
-                    <td>${doctor.Availability}</td>
-                    <td>${doctor.Consultation Fee}</td>
-                  </tr>
-                `);
-              });
-            } else {
-              $('#doctorTable tbody').append(`
-                <tr><td colspan="4">No records found</td></tr>
-              `);
-            }
+          $.ajax({
+              url: "report_action.php?url=getDoctor",
+              type: "POST",
+              data: { doctor_name: doctorName, specialist: specialist },
+              dataType: "json",
+              success: function(response) {
+                  if (response.status == "success") {
+                      var doctor = response.data;
+                      var doctorRow = "<tr>" +
+                                          "<td>" + doctor.fullName + "</td>" +
+                                          "<td>" + doctor.specialization + "</td>" +
+                                          "<td>" + doctor.availability + "</td>" +
+                                          "<td>" + doctor.consultation_fee + "</td>" +
+                                          "<td><button class='generate_report_btn' data-doctor='" + JSON.stringify(doctor) + "'>Generate Report</button></td>" +
+                                      "</tr>";
+                      $("#doctor_info").html(doctorRow);
+                      $("#doctor_table").show();
+                  } else {
+                      $("#doctor_info").html("<tr><td colspan='5' style='color:red;'>Doctor not found.</td></tr>");
+                      $("#doctor_table").show();
+                  }
+              }
           });
-        });
-      });
+       }
+
+       $(document).on('click', '.generate_report_btn', function() {
+          var doctor = $(this).data("doctor");
+
+          if (doctor) {
+              // Prepare the report URL with doctor data
+              var reportUrl = "Doctor.php?fullName=" + encodeURIComponent(doctor.fullName) +
+                              "&specialist=" + encodeURIComponent(doctor.specialization) +
+                              "&availability=" + encodeURIComponent(doctor.availability) +
+                              "&consultation_fee=" + encodeURIComponent(doctor.consultation_fee);
+              
+              // Open the report in a new window
+              window.open(reportUrl, "_blank");
+          }
+       });
+
+
+        // function generateReport() { 
+        //     var doctor = $("#generate_report").data("doctor");
+
+        //     if (doctor) {
+        //         // Ensure correct URL format
+        //         var reportUrl = "report.php?fullName=" + encodeURIComponent(doctor.fullName) +
+        //                         "&specialist=" + encodeURIComponent(doctor.specialization) +
+        //                         "&availability=" + encodeURIComponent(doctor.availability) +
+        //                         "&consultation_fee=" + encodeURIComponent(doctor.consultation_fee);
+                
+        //         // Open report in a new window
+        //         window.open(reportUrl, "_blank");
+        //     }
+        // }
 
     </script>
+
 
      <script src="../../assets/js/bootstrap.bundle.min.js" rel="stylesheet"></script>
    <!-- end scripts -->

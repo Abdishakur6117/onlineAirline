@@ -128,10 +128,17 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../../pages/Admin/Reports/Reports.php">
-              <!-- <i class="icon-book menu-icon"></i> -->
-              <span class="menu-title">Reports</span>
-            </a>
+              <a class="nav-link" data-toggle="collapse" href="#ui-basics" aria-expanded="false" aria-controls="ui-basics">
+                <!-- <i class="icon-disc menu-icon"></i> -->
+                <span class="menu-title">Reports</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="ui-basics">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="../../../pages/Admin/Reports/DoctorReport.php"> Doctor of Reports </a></li>
+                  <li class="nav-item"> <a class="nav-link" href="../../../pages/Admin/Reports/PatientReport.php">Patient of  Report</a></li>
+                </ul>
+              </div>
           </li>
         </ul>
       </nav>
