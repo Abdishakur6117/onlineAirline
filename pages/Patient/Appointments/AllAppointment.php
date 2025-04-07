@@ -50,9 +50,6 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Patient') {
   <div class="container-scroller">
     <!-- partial:../../../partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <h2 class="text-3xl mt-5 text-black p-3">Online Doctor Appointment System</h2>
-      </div>
       <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
           <span class="icon-menu"></span>
@@ -115,12 +112,6 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Patient') {
             <a class="nav-link" href="../../../pages/Patient/Payments/Payments.php">
               <!-- <i class="icon-help menu-icon"></i> -->
               <span class="menu-title">Payments</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../../../pages/Patient/Reports/Reports.php">
-              <!-- <i class="icon-book menu-icon"></i> -->
-              <span class="menu-title">Reports</span>
             </a>
           </li>
         </ul>
@@ -263,7 +254,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Patient') {
                                 <input type="text" id="edit_consultation_fee" name="edit_consultation_fee" class="form-control" readonly>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Report </button>
+                            <button type="submit" class="btn btn-primary">view </button>
                           </form>
 
                           </div>

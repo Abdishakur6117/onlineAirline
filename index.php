@@ -66,9 +66,6 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
   <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <h2 class="text-3xl mt-5 text-black p-3 overflow-hidden"> Doctor Appointment System</h2>
-      </div>
       <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
           <span class="icon-menu"></span>

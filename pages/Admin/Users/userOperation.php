@@ -10,69 +10,7 @@ function displayUser(){
   // print_r($query->selectAll('students'));
   echo json_encode($query->selectAll('Users'));
 }
-//insert users
-// function createUser(){
-//   include '../../Connection/connection.php';
-//   $db = new DatabaseConnection();
-//   $conn =$db->getConnection();
-//   $fullName =$_POST['fullName'];
-//   $email =$_POST['email'];
-//   $userName =$_POST['userName'];
-//   $password =$_POST['password'];
-//   $phone =$_POST['phone'];
 
-//   if(!$fullName){
-//     echo json_encode(["status" => "error", "message" => "fullName  is required."]);
-//       return;
-//   }
-//   if(!$email){
-//     echo json_encode(["status" => "error", "message" => "email  is required."]);
-//       return;
-//   }
-//   if(!$userName){
-//     echo json_encode(["status" => "error", "message" => " userName  is required."]);
-//       return;
-//   }
-//   if(!$password){
-//     echo json_encode(["status" => "error", "message" => " password  is required."]);
-//       return;
-//   }
-//   if(!$phone){
-//     echo json_encode(["status" => "error", "message" => " phone  is required."]);
-//       return;
-//   }
-//   //checks emails
-//   $emailCheck = "SELECT * FROM Users WHERE email =:email ";
-//   $stm =$conn->prepare($emailCheck);
-//   $stm->bindParam(':email',$email);
-//   $stm->execute();
-//   $emailExists = $stm->fetchColumn();
-//   if($emailExists > 0){
-//     echo json_encode(["status" => "error", "message" => 'Email already exists ']);
-//     return;
-
-//   }
-
-//    // INSERT query with correct column names in database
-//    $query = "INSERT INTO Users  (fullName ,email  ,userName,password,phone ) VALUES (:fullname,:email,:userName,:password,:phone)";
-//    $stm= $conn->prepare($query);
-//    $stm->bindParam(':fullname', $fullName);
-//    $stm->bindParam(':email', $email);
-//    $stm->bindParam(':userName', $userName);
-//    $stm->bindParam(':password', $password);
-//    $stm->bindParam(':phone', $phone);
-  
-
-//     if($stm->execute()){
-//       // echo json_encode(["status"=>"success",  "message"=>' data saved successfully']); 
-//       echo json_encode(["status" => "success", "message" => "User created successfully."]);
-//       return;
-
-//     }else{
-//       echo json_encode(['status'=>'error', "message"=>'data are  not saved']);
-//     }
-
-// }
 function createUser() {
     include '../../Connection/connection.php';
     $db = new DatabaseConnection();
@@ -241,6 +179,4 @@ function DeleteUser() {
       echo json_encode(["status" => "error", "message" => "Failed to delete user."]);
   }
 }
-
-
 ?>

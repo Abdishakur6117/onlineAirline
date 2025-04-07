@@ -61,9 +61,6 @@ table {
   <div class="container-scroller">
     <!-- partial:../../../partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <h2 class="text-3xl mt-5 text-black p-3">Online Doctor Appointment System</h2>
-      </div>
       <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
           <span class="icon-menu"></span>
@@ -255,41 +252,6 @@ table {
               }
           });
        }
-
-      //  $(document).on('click', '.generate_report_btn', function() {
-      //     var patient = $(this).data("patient");
-
-      //     if (patient) {
-      //         // Prepare the report URL with doctor data
-      //         var reportUrl = "Patient.php?fullName=" + encodeURIComponent(patient.fullName) +
-      //                         "&date_of_birth=" + encodeURIComponent(patient.date_of_birth) +
-      //                         "&gender=" + encodeURIComponent(patient.gender) +
-      //                         "&blood_type=" + encodeURIComponent(patient.blood_type)+
-      //                         "&address=" + encodeURIComponent(patient.address)+
-      //                         "&registration_date=" + encodeURIComponent(patient.registration_date);
-              
-      //         // Open the report in a new window
-      //         window.open(reportUrl, "_blank");
-      //     }
-      //  });
-
-      // $(document).on('click', '.generate_report_btn', function() {
-      //     var patient = $(this).data("patient");
-
-      //     if (patient) {
-      //         // Make sure to pass the patient_id in the URL
-      //         var reportUrl = "Patient.php?patient_id=" + encodeURIComponent(patient.patient_id) +
-      //                         "&fullName=" + encodeURIComponent(patient.fullName) +
-      //                         "&date_of_birth=" + encodeURIComponent(patient.date_of_birth) +
-      //                         "&gender=" + encodeURIComponent(patient.gender) +
-      //                         "&blood_type=" + encodeURIComponent(patient.blood_type) +
-      //                         "&address=" + encodeURIComponent(patient.address) +
-      //                         "&registration_date=" + encodeURIComponent(patient.registration_date);
-
-      //         // Open the report in a new window
-      //         window.open(reportUrl, "_blank");
-      //     }
-      // });
 
       $(document).on('click', '.generate_report_btn', function() {
           var patient = $(this).data("patient");
