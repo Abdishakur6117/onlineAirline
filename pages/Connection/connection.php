@@ -3,7 +3,7 @@ class DatabaseConnection{
     private $hostname="localhost";
     private $username="root";
     private $password="";
-    private $dbname="das_db";
+    private $dbname="online_feeding";
     private $conn;
     // private $PDO;
 

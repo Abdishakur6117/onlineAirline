@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); // Add this to the top of every page
 
 // Check if the user is logged in and has the 'Admin' role
 if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
@@ -9,6 +9,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +17,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
   <!-- Required meta tags --> 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Regal Admin</title>
+  <title>Online Feeding Management System</title>
   <!-- base:css -->
   <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="vendors/feather/feather.css">
@@ -31,32 +32,39 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="css/style.css">
-  <!-- endinject -->
-  <link rel="shortcut icon" href="images/favicon.png" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
-.sidebar {
-  position: fixed;
-  top: 5;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-  transition: all 0.3s;
-}
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%; /* buuxi ballaca shaashada */
+      z-index: 1030;
+      background-color: #fff; /* ama midabka aad rabto */
+    }
+    .sidebar {
+      position: fixed;
+      top: 5;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      transition: all 0.3s;
+    }
 
-/* Main content adjustment */
-.main-panel {
-  margin-left: 240px;
-  transition: all 0.3s;
-}
+    /* Main content adjustment */
+    .main-panel {
+      margin-left: 240px;
+      transition: all 0.3s;
+    }
 
 
 
-/* Footer adjustment */
-.footer {
-  width: calc(100% - 280px);
-  margin-left: 280px;
-  transition: all 0.3s;
-}
+    /* Footer adjustment */
+    .footer {
+      width: calc(100% - 280px);
+      margin-left: 280px;
+      transition: all 0.3s;
+    }
 
 
   </style>
@@ -89,12 +97,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
               <i class="icon-head"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-              <p class="mb-0 font-weight-normal float-left dropdown-header">Profile</p>
-              <p class="mb-0 font-weight-normal float-left dropdown-header">Email: <?= htmlspecialchars($_SESSION['email']); ?></p>
-              <a class="dropdown-item preview-item hover:cursor-pointer" href="pages/Admin/Profile/profile.php">               
-                  <i class="icon-head"></i>
-                  <span class="menu-title">Profile</span> 
-              </a>
+              <p class="mb-0 font-weight-normal float-left dropdown-header">username: <?= htmlspecialchars($_SESSION['username']); ?></p>
               <a class="dropdown-item preview-item cursor-pointer" href="logout.php">
                   <i class="icon-inbox"></i> 
                   <span class="menu-title">Logout</span>
@@ -114,146 +117,155 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         <ul class="nav mt-5">
           <li class="nav-item">
             <a class="nav-link" href="index.php">
-              <i class="icon-box menu-icon"></i>
+              <i class="fas fa-tachometer-alt menu-icon"></i>
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/Admin/Users/Users.php">
-              <!-- <i class="icon-file menu-icon"></i> -->
-              <i class="icon-head menu-icon"></i>
+            <a class="nav-link" href="pages/Admin/children.php">
+              <i class="fas fa-child menu-icon"></i>
+              <span class="menu-title">Children</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="pages/Admin/feeding.php">
+              <i class="fas fa-utensils menu-icon"></i>
+              <span class="menu-title">Feeding Program</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="pages/Admin/meals.php">
+              <i class="fas fa-hamburger menu-icon"></i>
+              <span class="menu-title">Meals</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="pages/Admin/staff.php">
+              <i class="fas fa-user-tie menu-icon"></i>
+              <span class="menu-title">Staff</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="pages/Admin/users.php">
+              <i class="fas fa-users-cog menu-icon"></i>
               <span class="menu-title">Users</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/Admin/Doctors/Doctors.php">
-              <!-- <i class="icon-file menu-icon"></i> -->
-              <span class="menu-title">Doctors</span>
+            <a class="nav-link" href="pages/Admin/feeding_record.php">
+              <i class="fas fa-notes-medical menu-icon"></i>
+              <span class="menu-title">Feeding Records</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="pages/Admin/Patients/Patients.php">
-              <!-- <i class="icon-pie-graph menu-icon"></i> -->
-              <span class="menu-title">Patients</span>
+            <a class="nav-link" href="pages/Admin/nutrition.php">
+              <i class="fas fa-heartbeat menu-icon"></i>
+              <span class="menu-title">Nutrition Assessments</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <!-- <i class="icon-disc menu-icon"></i> -->
-              <span class="menu-title">Appointments</span>
+            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basics" aria-expanded="false" aria-controls="ui-basics">
+              <i class="fas fa-chart-line menu-icon"></i>
+              <span class="menu-title">Reports</span>
               <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="ui-basic">
+            <div class="collapse" id="ui-basics">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/Admin/AcceptAppointment/Accept.php">Accept Appointment</a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/Admin/RejectAppointment/Reject.php">Reject Appointment</a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/Admin/Appointments/AllAppointment.php">All Appointment</a></li>
+                <li class="nav-item">
+                  <a class="nav-link" href="pages/Admin/childrenReport.php">Children Reports</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="pages/Admin/staffReport.php">Staff Reports</a>
+                </li>
               </ul>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/Admin/Payments/Payments.php">
-              <!-- <i class="icon-help menu-icon"></i> -->
-              <span class="menu-title">Payments</span>
-            </a>
-
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="collapse" href="#ui-basics" aria-expanded="false" aria-controls="ui-basics">
-                <!-- <i class="icon-disc menu-icon"></i> -->
-                <span class="menu-title">Reports</span>
-                <i class="menu-arrow"></i>
-              </a>
-              <div class="collapse" id="ui-basics">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item"> <a class="nav-link" href="pages/Admin/Reports/DoctorReport.php"> Doctor of Reports </a></li>
-                  <li class="nav-item"> <a class="nav-link" href="pages/Admin/Reports/PatientReport.php">Patient of  Report</a></li>
-                </ul>
-              </div>
-            </li>
         </ul>
       </nav>
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
-                  <h2 class="text-center mb-4">Dashboard Overview</h2>
-        <div class="row">
-            <!-- Total Users -->
-            <div class="col-md-3">
-                <div class="card text-white bg-primary mb-3 shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-users fa-2x"></i>
-                        <h5 class="card-title mt-2">Total Users</h5>
-                        <h3 id="totalUsers">0</h3>
-                    </div>
-                </div>
-            </div>
+          <h2 class="text-center mb-4">Dashboard Overview</h2>
+          <div class="row">
+              <!-- Total Children -->
+              <div class="col-md-3">
+                  <div class="card text-white bg-primary mb-3 shadow">
+                      <div class="card-body text-center">
+                          <i class="fas fa-child fa-2x"></i>
+                          <h5 class="card-title mt-2">Total Children</h5>
+                          <h3 id="totalChildren">0</h3>
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Total Doctors -->
-            <div class="col-md-3">
-                <div class="card text-white bg-success mb-3 shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-user-md fa-2x"></i>
-                        <h5 class="card-title mt-2">Total Doctors</h5>
-                        <h3 id="totalDoctors">0</h3>
-                    </div>
-                </div>
-            </div>
+              <!-- Total Feeding Programs -->
+              <div class="col-md-3">
+                  <div class="card text-white bg-success mb-3 shadow">
+                      <div class="card-body text-center">
+                          <i class="fas fa-utensils fa-2x"></i>
+                          <h5 class="card-title mt-2">Total Feeding Programs</h5>
+                          <h3 id="totalFeedingPrograms">0</h3>
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Total Patients -->
-            <div class="col-md-3">
-                <div class="card text-white bg-warning mb-3 shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-procedures fa-2x"></i>
-                        <h5 class="card-title mt-2">Total Patients</h5>
-                        <h3 id="totalPatients">0</h3>
-                    </div>
-                </div>
-            </div>
+              <!-- Total Meals -->
+              <div class="col-md-3">
+                  <div class="card text-white bg-warning mb-3 shadow">
+                      <div class="card-body text-center">
+                          <i class="fas fa-hamburger fa-2x"></i>
+                          <h5 class="card-title mt-2">Total Meals</h5>
+                          <h3 id="totalMeals">0</h3>
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Total Appointments -->
-            <div class="col-md-3">
-                <div class="card text-white bg-danger mb-3 shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-calendar-check fa-2x"></i>
-                        <h5 class="card-title mt-2">Total Appointments</h5>
-                        <h3 id="totalAppointments">0</h3>
-                    </div>
-                </div>
-            </div>
+              <!-- Total Staff -->
+              <div class="col-md-3">
+                  <div class="card text-white bg-danger mb-3 shadow">
+                      <div class="card-body text-center">
+                          <i class="fas fa-user-friends fa-2x"></i>
+                          <h5 class="card-title mt-2">Total Staff</h5>
+                          <h3 id="totalStaff">0</h3>
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Total Appointment Accepted -->
-            <div class="col-md-4">
-                <div class="card text-white bg-info mb-3 shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-check-circle fa-2x"></i>
-                        <h5 class="card-title mt-2">Appointments Accepted</h5>
-                        <h3 id="totalAccepted">0</h3>
-                    </div>
-                </div>
-            </div>
+              <!-- Total Users -->
+              <div class="col-md-4">
+                  <div class="card text-white bg-info mb-3 shadow">
+                      <div class="card-body text-center">
+                          <i class="fas fa-users fa-2x"></i> <!-- Changed to a more fitting icon -->
+                          <h5 class="card-title mt-2">Total Users</h5>
+                          <h3 id="totalUsers">0</h3>
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Total Appointment Rejected -->
-            <div class="col-md-4">
-                <div class="card text-white bg-secondary mb-3 shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-times-circle fa-2x"></i>
-                        <h5 class="card-title mt-2">Appointments Rejected</h5>
-                        <h3 id="totalRejected">0</h3>
-                    </div>
-                </div>
-            </div>
+              <!-- Total Feeding Records -->
+              <div class="col-md-4">
+                  <div class="card text-white bg-secondary mb-3 shadow">
+                      <div class="card-body text-center">
+                          <i class="fas fa-clipboard-list fa-2x"></i>
+                          <h5 class="card-title mt-2">Total Feeding Records</h5>
+                          <h3 id="totalFeedingRecords">0</h3>
+                      </div>
+                  </div>
+              </div>
 
-            <!-- Total Revenue -->
-            <div class="col-md-4">
-                <div class="card text-white bg-dark mb-3 shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-dollar-sign fa-2x"></i>
-                        <h5 class="card-title mt-2">Total Revenue</h5>
-                        <h3 id="totalRevenue">$0</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
+              <!-- Total Nutrition Assessments -->
+              <div class="col-md-4">
+                  <div class="card text-white bg-dark mb-3 shadow">
+                      <div class="card-body text-center">
+                          <i class="fas fa-notes-medical fa-2x"></i>
+                          <h5 class="card-title mt-2">Total Nutrition Assessments</h5>
+                          <h3 id="totalNutritionAssessments">$0</h3>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
@@ -270,23 +282,26 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
     <!-- page-body-wrapper ends -->
   </div>
   <script>
-        $(document).ready(function() {
-            $.get("get_dashboard_data.php", function(response) {
-                let data = JSON.parse(response);
-                $("#totalUsers").text(data.totalUsers);
-                $("#totalDoctors").text(data.totalDoctors);
-                $("#totalPatients").text(data.totalPatients);
-                $("#totalAppointments").text(data.totalAppointments);
-                $("#totalAccepted").text(data.totalAccepted);
-                $("#totalRejected").text(data.totalRejected);
-                $("#totalRevenue").text(data.totalRevenue);
-            });
+    $(document).ready(function() {
+        $.get("get_dashboard_data.php", function(response) {
+            let data = JSON.parse(response);
+            $("#totalChildren").text(data.totalChildren);
+            $("#totalFeedingPrograms").text(data.totalFeedingPrograms);
+            $("#totalMeals").text(data.totalMeals);
+            $("#totalStaff").text(data.totalStaff);
+            $("#totalUsers").text(data.totalUsers);
+            $("#totalFeedingRecords").text(data.totalFeedingRecords);
+            $("#totalNutritionAssessments").text(data.totalNutritionAssessments);
         });
-    </script>
+    });
+
+  </script>
   <!-- container-scroller -->
 
   <!-- base:js -->
   <script src="vendors/base/vendor.bundle.base.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
   <!-- endinject -->
   <!-- Plugin js for this page-->
   <!-- End plugin js for this page-->
