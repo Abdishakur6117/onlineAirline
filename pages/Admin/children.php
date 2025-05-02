@@ -196,7 +196,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" >Add New Children</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
@@ -245,7 +245,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary" >Save</button>
                       </div>
                     </form> 
@@ -265,7 +265,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" >Update  Children</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
@@ -315,7 +315,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary" >Update</button>
                       </div>
                     </form> 
