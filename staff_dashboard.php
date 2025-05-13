@@ -1,239 +1,341 @@
 <?php
 session_start();
-
-// Check if the user is logged in and has the 'Staff' role
-if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Staff') {
-    // Redirect to login page if not logged in or not an Staff
+require_once 'Connection/db_connect.php';
+// Check if the user is logged in and has the 'staff' role
+if (!isset($_SESSION['user']) || $_SESSION['role'] != 'staff') {
+    // Redirect to login page if not logged in or not an staff
     header("Location: login.php");
     exit();
 }
+
+// Tirada wax kasta
+$totalUsers = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
+$totalPassengers = $conn->query("SELECT COUNT(*) FROM passengers")->fetch_row()[0];
+$totalAircrafts = $conn->query("SELECT COUNT(*) FROM aircrafts")->fetch_row()[0];
+$totalFlights = $conn->query("SELECT COUNT(*) FROM flights")->fetch_row()[0];
+$totalBookings = $conn->query("SELECT COUNT(*) FROM bookings")->fetch_row()[0];
+$totalPayments = $conn->query("SELECT COUNT(*) FROM payments")->fetch_row()[0];
+$totalTickets = $conn->query("SELECT COUNT(*) FROM tickets")->fetch_row()[0];
 ?>
 
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
+ 
 <head>
-  <!-- Required meta tags --> 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Online Feeding Management System</title>
-  <!-- base:css -->
-  <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="vendors/feather/feather.css">
-  <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
-  <!-- endinject -->
-  <!-- plugin css for this page -->
-  <link rel="stylesheet" href="vendors/flag-icon-css/css/flag-icon.min.css"/>
-  <link rel="stylesheet" href="vendors/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="vendors/jquery-bar-rating/fontawesome-stars-o.css">
-  <link rel="stylesheet" href="vendors/jquery-bar-rating/fontawesome-stars.css">
-  <script src="pages/assets/js/jquery-3.5.1.min.js"></script>
-  <!-- End plugin css for this page -->
-  <!-- inject:css -->
-  <link rel="stylesheet" href="css/style.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <style>
-.sidebar {
-  position: fixed;
-  top: 5;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-  transition: all 0.3s;
-}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link href="assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/libs/css/style.css">
+    <link rel="stylesheet" href="assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+    <link rel="stylesheet" href="assets/vendor/charts/chartist-bundle/chartist.css">
+    <link rel="stylesheet" href="assets/vendor/charts/morris-bundle/morris.css">
+    <link rel="stylesheet" href="assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="assets/vendor/charts/c3charts/c3.css">
+    <link rel="stylesheet" href="assets/vendor/fonts/flag-icon-css/flag-icon.min.css">
+    <title>Online Airline</title>
+    <style>
+        .nav-left-sidebar .navbar-nav .nav-item {
+            margin-top: 10px;
+        }
+    .nav-left-sidebar {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
 
-/* Main content adjustment */
-.main-panel {
-  margin-left: 240px;
-  transition: all 0.3s;
-}
-
-
-
-/* Footer adjustment */
-.footer {
-  width: calc(100% - 280px);
-  margin-left: 280px;
-  transition: all 0.3s;
-}
-
-
-  </style>
-
+    </style>
 </head>
+
 <body>
-  <div class="container-scroller">
-    <!-- partial:partials/_navbar.html -->
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-          <span class="icon-menu"></span>
-        </button>
-        <ul class="navbar-nav mr-lg-2">
-          <li class="nav-item nav-search d-none d-lg-block">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="search">
-                  <i class="icon-search"></i>
-                </span>
-              </div>
-              <input type="text" class="form-control" placeholder="Search Projects.." aria-label="search" aria-describedby="search">
-            </div>
-          </li>
-        </ul>
-        <ul class="navbar-nav navbar-nav-right">
-          <li class="nav-item dropdown d-flex mr-4 ">
-            <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
-              <!-- <i class="icon-cog"></i> -->
-              <i class="icon-head"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-              <p class="mb-0 font-weight-normal float-left dropdown-header">username: <?= htmlspecialchars($_SESSION['username']); ?></p>
-              <a class="dropdown-item preview-item cursor-pointer" href="logout.php">
-                  <i class="icon-inbox"></i> 
-                  <span class="menu-title">Logout</span>
-              </a>
-            </div>
-          </li>
-        </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-          <span class="icon-menu"></span>
-        </button>
-      </div>
-    </nav>
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
-      <!-- partial:partials/_sidebar.html -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
-        <ul class="nav mt-5">
-          <li class="nav-item">
-            <a class="nav-link" href="staff_dashboard.php">
-              <i class="fas fa-tachometer-alt menu-icon"></i>
-              <span class="menu-title">Dashboard</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/Staff/children.php">
-              <i class="fas fa-child menu-icon"></i>
-              <span class="menu-title">Children</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/Staff/feeding_record.php">
-              <i class="fas fa-notes-medical menu-icon"></i>
-              <span class="menu-title">Feeding Records</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="pages/Staff/nutrition.php">
-              <i class="fas fa-heartbeat menu-icon"></i>
-              <span class="menu-title">Nutrition Assessments</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basics" aria-expanded="false" aria-controls="ui-basics">
-              <i class="fas fa-chart-line menu-icon"></i>
-              <span class="menu-title">Reports</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basics">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item">
-                  <a class="nav-link" href="pages/Staff/childrenReport.php">Children Reports</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </nav>
-      <!-- partial -->
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <h2 class="text-center mb-4">Dashboard Overview</h2>
-            <div class="row">
-              <!-- Total Children -->
-              <div class="col-md-3">
-                  <div class="card text-white bg-primary mb-3 shadow">
-                      <div class="card-body text-center">
-                          <i class="fas fa-child fa-2x"></i>
-                          <h5 class="card-title mt-2">Total Children</h5>
-                          <h3 id="totalChildren">0</h3>
-                      </div>
-                  </div>
-              </div>
-
-              <!-- Total Feeding Records -->
-              <div class="col-md-4">
-                  <div class="card text-white bg-secondary mb-3 shadow">
-                      <div class="card-body text-center">
-                          <i class="fas fa-clipboard-list fa-2x"></i>
-                          <h5 class="card-title mt-2">Total Feeding Records</h5>
-                          <h3 id="totalFeedingRecords">0</h3>
-                      </div>
-                  </div>
-              </div>
-
-              <!-- Total Nutrition Assessments -->
-              <div class="col-md-4">
-                  <div class="card text-white bg-dark mb-3 shadow">
-                      <div class="card-body text-center">
-                          <i class="fas fa-notes-medical fa-2x"></i>
-                          <h5 class="card-title mt-2">Total Nutrition Assessments</h5>
-                          <h3 id="totalNutritionAssessments">$0</h3>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+        <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+        <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <a class="navbar-brand" href="staff_dashboard.php">Online Airline</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto navbar-right-top">
+                        <li class="nav-item">
+                            <div id="custom-search" class="top-search-bar">
+                                <input class="form-control" type="text" placeholder="Search..">
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown nav-user">
+                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="assets/images/avatar-1.jpg" alt="" class="user-avatar-md rounded-circle"></a>
+                            <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
+                                <div class="nav-user-info">
+                                    <h5 class="mb-0 text-white nav-user-name"><?php echo htmlspecialchars($_SESSION['user']); ?> </h5>
+                                    <span class="status"></span><span class="ml-2"><?php echo htmlspecialchars($_SESSION['role']); ?></span>
+                                </div>
+                                <a class="dropdown-item" href="logout.php"><i class="fas fa-power-off mr-2"></i>Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </div>
-        <!-- content-wrapper ends -->
-        <!-- partial:partials/_footer.html -->
-        <footer class="footer">
-          <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © bootstrapdash.com 2020</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>
-          </div>
-        </footer>
-        <!-- partial -->
-      </div>
-      <!-- main-panel ends -->
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+        <div class="nav-left-sidebar sidebar-dark">
+            <div class="menu-list">
+                <nav class="navbar navbar-expand-lg navbar-light ">
+                    <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-item ">
+                                <a class="nav-link  margin-top-10" href="staff_dashboard.php"><i class="fa fa-fw fa-user-circle"></i>Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-2" aria-controls="submenu-2"><i class="fa fa-fw fa-rocket"></i>Passengers</a>
+                                <div id="submenu-2" class="collapse submenu" >
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="staff/passenger.php">List Passenger</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-3" aria-controls="submenu-3"><i class="fas fa-fw fa-chart-pie"></i>AirCrafts</a>
+                                <div id="submenu-3" class="collapse submenu" >
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="staff/aircraft.php">List AirCrafts</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-4" aria-controls="submenu-4"><i class="fab fa-fw fa-wpforms"></i>Flights</a>
+                                <div id="submenu-4" class="collapse submenu" >
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="staff/flight.php">List  Flight</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-5" aria-controls="submenu-5"><i class="fas fa-fw fa-table"></i>Booking</a>
+                                <div id="submenu-5" class="collapse submenu" >
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="staff/Booking.php">List  Booking</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-6" aria-controls="submenu-6"><i class="fas fa-fw fa-file"></i> Payments </a>
+                                <div id="submenu-6" class="collapse submenu" >
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="staff/payment.php">List  Payment</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-7" aria-controls="submenu-7"><i class="fas fa-fw fa-inbox"></i>Tickets <span class="badge badge-secondary">New</span></a>
+                                <div id="submenu-7" class="collapse submenu" >
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="staff/ticket.php">List Ticket</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-9" aria-controls="submenu-9"><i class="fas fa-fw fa-map-marker-alt"></i>Reports</a>
+                                <div id="submenu-9" class="collapse submenu" >
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="staff/passengerReport.php">Passenger report</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+        <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title"> Dashboard </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="container mt-5">
+                        <div class="row">
+                            <!-- Passengers -->
+                            <div class="col-md-3 mb-4">
+                                <div class="card text-white bg-success">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Passengers</h5>
+                                            <h3><?php echo $totalPassengers; ?></h3>
+                                        </div>
+                                        <i class="fa fa-user-friends fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Aircrafts -->
+                            <div class="col-md-3 mb-4">
+                                <div class="card text-white bg-info">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Aircrafts</h5>
+                                            <h3><?php echo $totalAircrafts; ?></h3>
+                                        </div>
+                                        <i class="fa fa-plane fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Flights -->
+                            <div class="col-md-3 mb-4">
+                                <div class="card text-white bg-warning">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Flights</h5>
+                                            <h3><?php echo $totalFlights; ?></h3>
+                                        </div>
+                                        <i class="fa fa-plane-departure fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bookings -->
+                            <div class="col-md-3 mb-4">
+                                <div class="card text-white bg-danger">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Bookings</h5>
+                                            <h3><?php echo $totalBookings; ?></h3>
+                                        </div>
+                                        <i class="fa fa-book fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payments -->
+                            <div class="col-md-3 mb-4">
+                                <div class="card text-white bg-secondary">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Payments</h5>
+                                            <h3><?php echo $totalPayments; ?></h3>
+                                        </div>
+                                        <i class="fa fa-credit-card fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tickets -->
+                            <div class="col-md-3 mb-4">
+                                <div class="card text-white bg-primary">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Tickets</h5>
+                                            <h3><?php echo $totalTickets; ?></h3>
+                                        </div>
+                                        <i class="fa fa-ticket-alt fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <div class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                             Copyright © 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                            <div class="text-md-right footer-links d-none d-sm-block">
+                                <a href="javascript: void(0);">About</a>
+                                <a href="javascript: void(0);">Support</a>
+                                <a href="javascript: void(0);">Contact Us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- end wrapper  -->
+        <!-- ============================================================== -->
     </div>
-    <!-- page-body-wrapper ends -->
-  </div>
-  <script>
-    $(document).ready(function() {
-        $.get("get_staff.php", function(response) {
-            let data = JSON.parse(response);
-            $("#totalChildren").text(data.totalChildren);
-            $("#totalFeedingRecords").text(data.totalFeedingRecords);
-            $("#totalNutritionAssessments").text(data.totalNutritionAssessments);
-        });
-    });
-
-  </script>
-  <!-- container-scroller -->
-
-  <!-- base:js -->
-  <script src="vendors/base/vendor.bundle.base.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- endinject -->
-  <!-- Plugin js for this page-->
-  <!-- End plugin js for this page-->
-  <!-- inject:js -->
-  <script src="js/off-canvas.js"></script>
-  <script src="js/hoverable-collapse.js"></script>
-  <script src="js/template.js"></script>
-  <!-- endinject -->
-  <!-- plugin js for this page -->
-  <script src="vendors/chart.js/Chart.min.js"></script>
-  <script src="vendors/jquery-bar-rating/jquery.barrating.min.js"></script>
-  <!-- End plugin js for this page -->
-  <!-- Custom js for this page-->
-  <script src="js/dashboard.js"></script>
-  <!-- End custom js for this page-->
+    <!-- ============================================================== -->
+    <!-- end main wrapper  -->
+    <!-- ============================================================== -->
+    <!-- Optional JavaScript -->
+    <!-- jquery 3.3.1 -->
+    <script src="assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <!-- bootstap bundle js -->
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <!-- slimscroll js -->
+    <script src="assets/vendor/slimscroll/jquery.slimscroll.js"></script>
+    <!-- main js -->
+    <script src="assets/libs/js/main-js.js"></script>
+    <!-- chart chartist js -->
+    <script src="assets/vendor/charts/chartist-bundle/chartist.min.js"></script>
+    <!-- sparkline js -->
+    <script src="assets/vendor/charts/sparkline/jquery.sparkline.js"></script>
+    <!-- morris js -->
+    <script src="assets/vendor/charts/morris-bundle/raphael.min.js"></script>
+    <script src="assets/vendor/charts/morris-bundle/morris.js"></script>
+    <!-- chart c3 js -->
+    <script src="assets/vendor/charts/c3charts/c3.min.js"></script>
+    <script src="assets/vendor/charts/c3charts/d3-5.4.0.min.js"></script>
+    <script src="assets/vendor/charts/c3charts/C3chartjs.js"></script>
+    <script src="assets/libs/js/dashboard-ecommerce.js"></script>
 </body>
-
+ 
 </html>
-

@@ -1,18 +1,17 @@
-<?php 
+<?php
 $route = $_REQUEST['url'];
 $route();
 
-// session_start();
 function login() {
-    include 'pages/Connection/connection.php';
+    include 'Connection/connection.php';
     $db = new DatabaseConnection();
     $conn = $db->getConnection();
 
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-    if (!$username) {
-        echo json_encode(["status" => "error", "message" => 'username is required']);
+    if (!$email) {
+        echo json_encode(["status" => "error", "message" => 'Username or Email is required']);
         return;
     }
     if (!$password) {
@@ -20,29 +19,59 @@ function login() {
         return;
     }
 
-    // Query to check the user in the database, adding the status and deleted_at conditions
-    $query = 'SELECT * FROM users WHERE username = :username';
-    $stm = $conn->prepare($query);
-    $stm->execute(['username' => $username]);
-    $userData = $stm->fetch(PDO::FETCH_ASSOC);
+    // ---------- 1. Check in users table (username only) ----------
+    $queryUser = 'SELECT * FROM users WHERE username = :username AND status = "active"';
+    $stmUser = $conn->prepare($queryUser);
+    $stmUser->execute(['username' => $email]);
+    $userData = $stmUser->fetch(PDO::FETCH_ASSOC);
 
     if ($userData) {
-        // Check if password matches
-        if ($password == $userData['password']) {  // Use password_verify for hashed passwords
+        if ($password == $userData['password']) {
             session_start();
             $_SESSION['user'] = $userData['username'];
-            $_SESSION['id'] = $userData['id'];
-            $_SESSION['role'] = $userData['role'];  // Save user role in the session
-            $_SESSION['username'] = $userData['username'];
+            $_SESSION['user_id'] = $userData['user_id'];
+            $_SESSION['role'] = $userData['role'];
+            $_SESSION['email'] = null;
 
-            echo json_encode(["status" => "success", "message" => 'User logged in successfully', "role" => $userData['role']]);
+            echo json_encode([
+                "status" => "success",
+                "message" => 'User logged in successfully',
+                "role" => $userData['role']
+            ]);
+            return;
         } else {
             echo json_encode(["status" => "error", "message" => 'Incorrect password']);
+            return;
         }
-    } else {
-        echo json_encode(["status" => "error", "message" => 'User not found, or inactive or deleted']);
     }
+
+    // ---------- 2. Check in passengers table (email) ----------
+    $queryPassenger = 'SELECT * FROM passengers WHERE email = :email';
+    $stmPass = $conn->prepare($queryPassenger);
+    $stmPass->execute(['email' => $email]);
+    $passengerData = $stmPass->fetch(PDO::FETCH_ASSOC);
+
+    if ($passengerData) {
+        if ($password == $passengerData['password']) {
+            session_start();
+            $_SESSION['user'] = $passengerData['first_name'] . ' ' . $passengerData['last_name'];
+            $_SESSION['user_id'] = $passengerData['passenger_id'];
+            $_SESSION['role'] = 'passenger';
+            $_SESSION['email'] = $passengerData['email'];
+
+            echo json_encode([
+                "status" => "success",
+                "message" => 'Passenger logged in successfully',
+                "role" => 'passenger'
+            ]);
+            return;
+        } else {
+            echo json_encode(["status" => "error", "message" => 'Incorrect password']);
+            return;
+        }
+    }
+
+    // ---------- If no match in both tables ----------
+    echo json_encode(["status" => "error", "message" => 'User not found']);
 }
-
-
 ?>
